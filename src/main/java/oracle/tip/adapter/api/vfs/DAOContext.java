@@ -15,6 +15,9 @@ public class DAOContext {
         }
 
         public static final String DATA_SOURCE_JNDI_NAME = "jndiName";
+        public static final String DB_URL = "dbUrl";
+        public static final String USER = "user";
+        public static final String PASSWORD = "password";
 
         public String getProperty(String key) {
                 return this.properties.get(key);

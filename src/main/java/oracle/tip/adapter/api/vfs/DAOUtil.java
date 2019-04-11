@@ -73,4 +73,25 @@ public class DAOUtil {
             }
     }
 
+
+		public static String getUpdateQuery(TableEntry entry) {
+			StringBuilder builder = new StringBuilder();
+			boolean gotData = false;
+            builder.append("UPDATE ATTACHMENT_TABLE SET ");
+            if(entry.getAttachmentInputStream() != null) {
+            	gotData = true;
+            	builder.append("ATTACHMENT_BLOB = ?");
+            } 
+            if(entry.getMetadataInputStream() != null) {
+            	gotData = true;
+            	builder.append(", METADATA_BLOB = ? ");
+            }
+            if(gotData) {
+            	builder.append(" WHERE FILEPATH = ? AND FLOWID = ? ");
+            	return builder.toString();
+            } else { 
+            	return null;
+            }
+		}
+
 }

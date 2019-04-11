@@ -10,9 +10,6 @@ import java.io.File;
 import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ResourceBundle;
-
-import javax.swing.text.html.FormSubmitEvent.MethodType;
 
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -42,9 +39,12 @@ public class TableDAOTest {
 	@BeforeClass
 	public static void setup() throws Exception {
 		context = new DAOContext();
-		context.setProperty(DAOContext.DATA_SOURCE_JNDI_NAME, "jndi/dataSource");
+//		context.setProperty(DAOContext.DATA_SOURCE_JNDI_NAME, "jndi/dataSource");
+		context.setProperty(DAOContext.DB_URL, "jdbc:oracle:thin:@den02nxn.us.oracle.com:1521:xe");
+    	context.setProperty(DAOContext.USER, "ISCS_SOAINFRA");
+    	context.setProperty(DAOContext.PASSWORD, "welcome1");
 		dao = DAOFactory.getDAO(DAOType.DATABASE, context);
-		connection = ((TableDAOImpl)dao).getConnectionFromDataSource();
+		connection = ((TableDAOImpl)dao).getDatabaseConnection();
 		tempPath = System.getProperty("java.io.tmpdir")+File.separator+"temp.txt";
 	}
 	
@@ -90,7 +90,20 @@ public class TableDAOTest {
 	}
 	
 	@Test
-	public void test3DeleteEntry() {
+	public void test3UpdateEntry() {
+		TableEntry entry = getTableEntry();
+		boolean flag = false;
+		try {
+			flag = dao.updateTableEntry(entry);
+		} catch (DAOException e) {
+			e.printStackTrace();
+		}
+		assertTrue(flag);
+		
+	}
+	
+	@Test
+	public void test4DeleteEntry() {
 		boolean flag = false;
 		try {
 			flag = dao.deleteTableEntry(tempPath, FLOWID);
