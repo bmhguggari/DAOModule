@@ -4,131 +4,162 @@
 package oracle.tip.adapter.api.vfs;
 
 import static org.junit.Assert.*;
-
-import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.io.InputStream;
-import java.sql.Connection;
-import java.sql.SQLException;
-
-import org.junit.AfterClass;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
 import org.junit.Test;
-import org.junit.runners.MethodSorters;
 
-import oracle.tip.adapter.api.vfs.DAOFactory.DAOType;
 
 /**
  * @author hguggari
  *
  */
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
-public class TableDAOTest {
-	
-	private static Connection connection;
-	private static DAOContext context;
-	private static TableDAO dao;
-	private static String tempPath = null;
-	private static String FLOWID ="flawId";
-	private static String TENANTID ="tenantId";
 
+public class TableDAOTest extends TableDAOMocker {
 	public TableDAOTest() {
 	}
 	
-	@BeforeClass
-	public static void setup() throws Exception {
-		context = new DAOContext();
-//		context.setProperty(DAOContext.DATA_SOURCE_JNDI_NAME, "jndi/dataSource");
-		context.setProperty(DAOContext.DB_URL, "jdbc:oracle:thin:@den02nxn.us.oracle.com:1521:xe");
-    	context.setProperty(DAOContext.USER, "ISCS_SOAINFRA");
-    	context.setProperty(DAOContext.PASSWORD, "welcome1");
-		dao = DAOFactory.getDAO(DAOType.DATABASE, context);
-		connection = ((TableDAOImpl)dao).getDatabaseConnection();
-		tempPath = System.getProperty("java.io.tmpdir")+File.separator+"temp.txt";
-	}
-	
-	@AfterClass
-	public static void teardown() throws SQLException {
-		if(connection != null) {
-			connection.close();
-		}
-	}
-
 	@Test
-	public void testRequiredInstance() {
+	public void testMockObjects() {
+		assertNotNull(datasource);
 		assertNotNull(connection);
-		assertNotNull(tempPath);
-	}
-	
-	
-	
-	
-	@Test
-	public void test1InsertEntry() {
-		TableEntry entry = getTableEntry();
-		boolean flag = false;
-		try {
-			flag = dao.insertTableEntry(entry);
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(flag);
+		assertNotNull(prepStatement);
+		assertNotNull(statement);
+		assertNotNull(resultSet);
 		
 	}
 	
-	@Test
-	public void test2GetEntry() {
-		TableEntry entry = null;
+	@Test 
+	public void testNewTableEntry() {
+		TableDAO dao = null;
 		try {
-			entry = dao.getTableEntry(tempPath, FLOWID);
-		} catch (DAOException e) {
+			mockNewTableEntry();
+			assertNotNull(datasource);
+			assertNull(dao);
+			
+			dao = new TableDAOImpl(new DAOContext());
+			
+			assertNotNull(dao);
+			
+			dao.setDataSource(datasource);
+			
+			boolean inserted = dao.insertTableEntry(getTableEntry());
+			
+			assertTrue(inserted);
+			
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		assertNotNull(entry);
-		
 	}
 	
-	@Test
-	public void test3UpdateEntry() {
-		TableEntry entry = getTableEntry();
-		boolean flag = false;
-		try {
-			flag = dao.updateTableEntry(entry);
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(flag);
-		
-	}
-	
-	@Test
-	public void test4DeleteEntry() {
-		boolean flag = false;
-		try {
-			flag = dao.deleteTableEntry(tempPath, FLOWID);
-		} catch (DAOException e) {
-			e.printStackTrace();
-		}
-		assertTrue(flag);
-		
-	}
 
-	private TableEntry getTableEntry() {
-		TableEntry entry = new TableEntry();
-		entry.setFilePath(tempPath);
-		entry.setParent(new File(tempPath).getParent());
-		entry.setAttachmentInputStream(getInputStream());
-		entry.setFlowId(FLOWID);
-		entry.setChunked(false);
-		entry.setDirectory(false);
-		entry.setMetadataInputStream(getInputStream());
-		entry.setTenantId(TENANTID);
-		return entry;
+	@Test(expected = DAOException.class)
+	public void testDuplicateTableEntry() throws Exception {
+		TableDAO dao = null;
+			mockDuplicateTableEntry();
+			assertNotNull(datasource);
+			assertNull(dao);
+			
+			dao = new TableDAOImpl(new DAOContext());
+			
+			assertNotNull(dao);
+			
+			dao.setDataSource(datasource);
+			
+			boolean inserted = dao.insertTableEntry(getTableEntry());
+			
+			assertTrue(inserted);
+			
 	}
-
 	
-	private InputStream getInputStream() {
-		return new ByteArrayInputStream("Testing the stream storage on database".getBytes());
+	@Test 
+	public void testDeleteTableEntry() {
+		TableDAO dao = null;
+		try {
+			mockDeleteTableEntry();
+			assertNotNull(datasource);
+			assertNull(dao);
+			
+			dao = new TableDAOImpl(new DAOContext());
+			
+			assertNotNull(dao);
+			
+			dao.setDataSource(datasource);
+			
+			boolean deleted = dao.deleteTableEntry(TEMP_PATH, FLOW_ID);
+			
+			assertTrue(deleted);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
+	
+	
+	@Test
+	public void testDeleteNonExistingTableEntry() {
+		TableDAO dao = null;
+		try {
+			mockDeleteNonExistingTableEntry();
+			assertNotNull(datasource);
+			assertNull(dao);
+			
+			dao = new TableDAOImpl(new DAOContext());
+			
+			assertNotNull(dao);
+			
+			dao.setDataSource(datasource);
+			
+			boolean deleted = dao.deleteTableEntry(TEMP_PATH, FLOW_ID);
+			
+			assertFalse(deleted);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetTableEntry() {
+		TableDAO dao = null;
+		try {
+			mockGetTableEntry();
+			assertNotNull(datasource);
+			assertNull(dao);
+			
+			dao = new TableDAOImpl(new DAOContext());
+			
+			assertNotNull(dao);
+			
+			dao.setDataSource(datasource);
+			
+			TableEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
+			
+			assertNotNull(entry);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	@Test
+	public void testGetNonExistingTableEntry() {
+		TableDAO dao = null;
+		try {
+			mockGetNonExistingTableEntry();
+			assertNotNull(datasource);
+			assertNull(dao);
+			
+			dao = new TableDAOImpl(new DAOContext());
+			
+			assertNotNull(dao);
+			
+			dao.setDataSource(datasource);
+			
+			TableEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
+			
+			assertNull(entry);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
 }

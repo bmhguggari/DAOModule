@@ -30,7 +30,7 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
             int count = 0;
             try {
                     if(entry  == null) {
-                            throw new DAOException("Entry should not be null");
+                            throw new DAOException("TableEntry should not be null, Please provide the valid table entry to persist");
                     }
                     //get Connection
                     connection = getDatabaseConnection();
@@ -38,13 +38,13 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
                     //prepare SQL statement
                     prepStatement = connection.prepareStatement(INSERT_ENTRY);
 
-                    //Ask helper to update the statement with values from entry
+                    //Ask helper to update the SQL statement with values from entry
                     DAOUtil.updateStatement(entry, prepStatement);
 
                     //execute the SQL
                     count = prepStatement.executeUpdate();
 
-                    return count > 0 ? true : false;
+                    return count == 1 ? true : false;
 
             } catch(Exception ex) {
                     try { if(connection != null) connection.rollback();} catch (SQLException e) {}
@@ -76,10 +76,9 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
 
                         //execute the SQL
                         resultSet = prepStatement.executeQuery();
-                        TableEntry entry = new TableEntry();
 
                         //Ask helper to populate the entry object from the result set
-                        DAOUtil.populateEntry(resultSet, entry);
+                        TableEntry entry = DAOUtil.populateEntry(resultSet);
 
                         return entry;
 
@@ -186,21 +185,4 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
                         try { if(connection != null) connection.close(); } catch(SQLException ex) {}
                 }
         }
-        
-        /*public static void main(String[] args) {
-        	DAOContext context = new DAOContext();
-//        	context.setProperty(DAOContext.DATA_SOURCE_JNDI_NAME, "jndi/DataSource");
-        	context.setProperty(DAOContext.DB_URL, "jdbc:oracle:thin:@den02nxn.us.oracle.com:1521:xe");
-        	context.setProperty(DAOContext.USER, "ISCS_SOAINFRA");
-        	context.setProperty(DAOContext.PASSWORD, "welcome1");
-			try {
-				TableDAOImpl dd = new TableDAOImpl(context);
-				Connection connection = dd.getDatabaseConnection();
-				System.out.println(connection);
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
-		
-		}*/
-		
 }

@@ -10,7 +10,9 @@ import javax.sql.DataSource;
 
 /**
  * @author hguggari
- *
+ * This class accepts the DAOContext and creates data source and connection objects based on context details.
+ *  If data source present in the context, all connection to database would be created from data source
+ *  else connection would be created from the connection details in terms of URL, user name and password
  */
 public class BaseDAO {
         protected DataSource dataSource;
@@ -21,14 +23,22 @@ public class BaseDAO {
             init();
         }
 
+        /**
+         * Initialize the data source
+         * @throws Exception
+         */
         private void init() throws Exception {
             String dsName = context.getProperty(DAOContext.DATA_SOURCE_JNDI_NAME);
             if(dsName != null && !dsName.isEmpty()) {
-            	this.dataSource = getDataSource();
+            	this.dataSource = createDataSource();
             }
         }
 
-
+        /**
+         * creates data base connection either from data source or from the provided data base connection details
+         * @return
+         * @throws Exception
+         */
         public Connection getDatabaseConnection() throws Exception {
             try {
             	if(this.dataSource == null) {
@@ -42,15 +52,17 @@ public class BaseDAO {
 
         }
 
+        
         private Connection getUrlConnection() {
         	Connection conn = null;
         	String url = null;
         	String user = null;
         	String password = null;
         	try {
-        		url = this.context.getProperty(DAOContext.DB_URL);//"jdbc:oracle:thin:@den02nxn.us.oracle.com:1521:xe";
-        		user = this.context.getProperty(DAOContext.USER);//"ISCS_SOAINFRA";
-        		password = this.context.getProperty(DAOContext.PASSWORD);//"welcome1";
+        		//"jdbc:oracle:thin:@host:port:schema";
+        		url = this.context.getProperty(DAOContext.DB_URL);
+        		user = this.context.getProperty(DAOContext.USER);
+        		password = this.context.getProperty(DAOContext.PASSWORD);
 				Class.forName("oracle.jdbc.driver.OracleDriver");
 				conn = DriverManager.getConnection(url, user, password);
 			} catch (ClassNotFoundException e) {
@@ -66,7 +78,7 @@ public class BaseDAO {
          * @return DataSource
          * @throws Exception
          */
-        private DataSource getDataSource() throws Exception {
+        private DataSource createDataSource() throws Exception {
             Context ctx = null;
             try {
                 ctx = new InitialContext();
@@ -76,6 +88,13 @@ public class BaseDAO {
             	try { if (ctx != null) ctx.close(); ctx = null; } catch (Exception e) { }
             }
         }
-
+        
+        public DataSource getDataSource() {
+        	return this.dataSource;
+        }
+        
+        //Mutator mostly used for JUNIT
+        public void setDataSource(DataSource source) {
+        	this.dataSource = source;
+        }
 }
-

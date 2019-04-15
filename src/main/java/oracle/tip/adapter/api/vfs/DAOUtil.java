@@ -23,26 +23,27 @@ public class DAOUtil {
          * @param entry
          * @throws DAOException
          */
-        public static void populateEntry(ResultSet resultSet, TableEntry entry) throws DAOException {
-                try {
-                        if(resultSet == null || entry == null) {
-                                throw new NullPointerException("Either resultSet or entry object are null");
-                        }
-                        if(resultSet.next()) {
-	                        entry.setFilePath(resultSet.getString(1));
-	                        entry.setAttachmentInputStream(resultSet.getBinaryStream(2));
-	                        entry.setMetadataInputStream(resultSet.getBinaryStream(3));
-	                        entry.setParent(resultSet.getString(4));
-	                        entry.setFlowId(resultSet.getString(5));
-	                        entry.setTenantId(resultSet.getString(6));
-	                        entry.setChunked(resultSet.getBoolean(7));
-	                        entry.setDirectory(resultSet.getBoolean(8));
-                        }
-
-                        return;
-                } catch(SQLException ex) {
-                        throw new DAOException(ex);
+        public static TableEntry populateEntry(ResultSet resultSet) throws DAOException {
+        	TableEntry entry = null;
+            try {
+                if(resultSet == null) {
+                        throw new NullPointerException("Either resultSet or entry object are null");
                 }
+                if(resultSet.next()) {
+                	entry = new TableEntry();
+                    entry.setFilePath(resultSet.getString(1));
+                    entry.setAttachmentInputStream(resultSet.getBinaryStream(2));
+                    entry.setMetadataInputStream(resultSet.getBinaryStream(3));
+                    entry.setParent(resultSet.getString(4));
+                    entry.setFlowId(resultSet.getString(5));
+                    entry.setTenantId(resultSet.getString(6));
+                    entry.setChunked(resultSet.getBoolean(7));
+                    entry.setDirectory(resultSet.getBoolean(8));
+                }
+            } catch(SQLException ex) {
+                    throw new DAOException(ex);
+            }
+            return entry;
         }
 
 
