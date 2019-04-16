@@ -24,7 +24,7 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
         }
 
        
-        public boolean insertTableEntry(VirtualFileEntry entry) throws DAOException {
+        public boolean insertFileEntry(VirtualFileEntry entry) throws DAOException {
             Connection connection = null;
             PreparedStatement prepStatement = null;
             int count = 0;
@@ -47,7 +47,6 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
                     return count == 1 ? true : false;
 
             } catch(Exception ex) {
-                    try { if(connection != null) connection.rollback();} catch (SQLException e) {}
                     throw new DAOException(ex);
             } finally {
                     try { if(prepStatement != null) prepStatement.close(); } catch(SQLException ex) {}
@@ -56,7 +55,7 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
         }
         
        
-        public VirtualFileEntry getTableEntry(String filePath, String flowId) throws DAOException {
+        public VirtualFileEntry getFileEntry(String filePath, String flowId) throws DAOException {
                 Connection connection = null;
                 PreparedStatement prepStatement = null;
                 ResultSet resultSet = null;
@@ -83,7 +82,6 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
                         return entry;
 
                 } catch(Exception ex) {
-                        try { if(connection != null) connection.rollback();} catch (SQLException e) {}
                         throw new DAOException(ex);
                 } finally {
                         try { if(resultSet != null) resultSet.close(); } catch(SQLException ex) {}
@@ -93,7 +91,7 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
         }
 
 
-        public boolean updateTableEntry(VirtualFileEntry entry) throws DAOException {
+        public boolean updateFileEntry(VirtualFileEntry entry) throws DAOException {
             Connection connection = null;
             PreparedStatement prepStatement = null;
             int count = 0;
@@ -102,7 +100,7 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
                     throw new DAOException("Entry should not be null");
             	}
             	
-            	VirtualFileEntry oldEntry = getTableEntry(entry.getFilePath(), entry.getFlowId());
+            	VirtualFileEntry oldEntry = getFileEntry(entry.getFilePath(), entry.getFlowId());
             	if(oldEntry == null) {
             		throw new DAOException("Entry not found in the database with given details");
             	}
@@ -144,7 +142,6 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
             	}
 
             } catch(Exception ex) {
-                    try { if(connection != null) connection.rollback();} catch (SQLException e) {}
                     throw new DAOException(ex);
             } finally {
                     try { if(prepStatement != null) prepStatement.close(); } catch(SQLException ex) {}
@@ -154,7 +151,7 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
                 return false;
         }
         
-        public boolean deleteTableEntry(String filePath, String flowId) throws DAOException {
+        public boolean deleteFileEntry(String filePath, String flowId) throws DAOException {
                 Connection connection = null;
                 PreparedStatement prepStatement = null;
                 int count = 0;
@@ -178,7 +175,6 @@ public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
                         return count > 0 ? true : false;
 
                 } catch(Exception ex) {
-                        try { if(connection != null) connection.rollback();} catch (SQLException e) {}
                         throw new DAOException(ex);
                 } finally {
                         try { if(prepStatement != null) prepStatement.close(); } catch(SQLException ex) {}

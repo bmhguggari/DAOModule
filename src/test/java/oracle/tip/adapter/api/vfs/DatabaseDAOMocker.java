@@ -22,7 +22,7 @@ import javax.sql.DataSource;
  * @author hguggari
  *
  */
-public class TableDAOMocker {
+public class DatabaseDAOMocker {
 	
 	protected static final String TEMP_PATH = System.getProperty("java.io.tmpdir") + File.separator + "file.txt";
 	protected static final String FLOW_ID = "FlowId";
@@ -40,7 +40,7 @@ public class TableDAOMocker {
 	protected ResultSet resultSet = mock(ResultSet.class);
 	
 	
-	protected VirtualFileEntry getTableEntry() {
+	protected VirtualFileEntry getFileEntry() {
 		VirtualFileEntry entry = new VirtualFileEntry();
 		File file = new File(TEMP_PATH);
 		entry.setFilePath(file.getAbsolutePath());
@@ -62,7 +62,7 @@ public class TableDAOMocker {
 	 * Mocker for adding new table entry
 	 * @throws SQLException
 	 */
-	public void mockNewTableEntry() throws SQLException {
+	public void mockInsertFileEntry() throws SQLException {
 		
 		when(datasource.getConnection()).thenReturn(connection);
 
@@ -75,7 +75,7 @@ public class TableDAOMocker {
 	 * Mocker for adding duplicate table entry, constraint violation, SQLException
 	 * @throws SQLException
 	 */
-	public void mockDuplicateTableEntry() throws SQLException {
+	public void mockDuplicateFileEntry() throws SQLException {
 		
 		when(datasource.getConnection()).thenReturn(connection);
 
@@ -88,7 +88,7 @@ public class TableDAOMocker {
 	 * Mocker for the deleting existing table entry
 	 * @throws SQLException
 	 */
-	public void mockDeleteTableEntry() throws SQLException {
+	public void mockDeleteFileEntry() throws SQLException {
 		
 		when(datasource.getConnection()).thenReturn(connection);
 
@@ -101,7 +101,7 @@ public class TableDAOMocker {
 	 * Mocker for the deleting non-existing table entry. Which return 0 value
 	 * @throws SQLException
 	 */
-	public void mockDeleteNonExistingTableEntry() throws SQLException {
+	public void mockDeleteNonExistingFileEntry() throws SQLException {
 		
 		when(datasource.getConnection()).thenReturn(connection);
 
@@ -115,14 +115,14 @@ public class TableDAOMocker {
 	 * FILEPATH, ATTACHMENT_BLOB, METADATA_BLOB, PARENT, FLOWID, TENANTID, IS_CHUNKED, IS_DIRECTORY
 	 * @throws SQLException
 	 */
-	public void mockGetTableEntry() throws SQLException {
+	public void mockGetFileEntry() throws SQLException {
 		when(datasource.getConnection()).thenReturn(connection);
 
         when(connection.prepareStatement(any(String.class))).thenReturn(prepStatement);
         
         when(prepStatement.executeQuery()).thenReturn(resultSet);
         
-        VirtualFileEntry entry = getTableEntry();
+        VirtualFileEntry entry = getFileEntry();
         
         when(resultSet.next()).thenReturn(true);
         
@@ -144,7 +144,11 @@ public class TableDAOMocker {
         
 	}
 	
-	public void mockGetNonExistingTableEntry() throws SQLException {
+	/**
+	 * mock for the get file entry on non-exising file
+	 * @throws SQLException
+	 */
+	public void mockGetNonExistingFileEntry() throws SQLException {
 		when(datasource.getConnection()).thenReturn(connection);
 
         when(connection.prepareStatement(any(String.class))).thenReturn(prepStatement);
@@ -153,5 +157,15 @@ public class TableDAOMocker {
         
         when(resultSet.next()).thenReturn(false);
 	}
-		
+
+	
+	
+	public void mockUpdateFileEntry() throws SQLException {
+		mockGetFileEntry();
+		when(datasource.getConnection()).thenReturn(connection);
+
+        when(connection.prepareStatement(any(String.class))).thenReturn(prepStatement);
+        
+        when(prepStatement.executeUpdate()).thenReturn(1);
+	}
 }

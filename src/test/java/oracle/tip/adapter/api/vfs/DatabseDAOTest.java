@@ -12,8 +12,8 @@ import org.junit.Test;
  *
  */
 
-public class TableDAOTest extends TableDAOMocker {
-	public TableDAOTest() {
+public class DatabseDAOTest extends DatabaseDAOMocker {
+	public DatabseDAOTest() {
 	}
 	
 	@Test
@@ -30,7 +30,7 @@ public class TableDAOTest extends TableDAOMocker {
 	public void testNewTableEntry() {
 		DatabaseDAO dao = null;
 		try {
-			mockNewTableEntry();
+			mockInsertFileEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
@@ -40,7 +40,7 @@ public class TableDAOTest extends TableDAOMocker {
 			
 			dao.setDataSource(datasource);
 			
-			boolean inserted = dao.insertTableEntry(getTableEntry());
+			boolean inserted = dao.insertFileEntry(getFileEntry());
 			
 			assertTrue(inserted);
 			
@@ -53,7 +53,7 @@ public class TableDAOTest extends TableDAOMocker {
 	@Test(expected = DAOException.class)
 	public void testDuplicateTableEntry() throws Exception {
 		DatabaseDAO dao = null;
-			mockDuplicateTableEntry();
+			mockDuplicateFileEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
@@ -63,7 +63,7 @@ public class TableDAOTest extends TableDAOMocker {
 			
 			dao.setDataSource(datasource);
 			
-			boolean inserted = dao.insertTableEntry(getTableEntry());
+			boolean inserted = dao.insertFileEntry(getFileEntry());
 			
 			assertTrue(inserted);
 			
@@ -73,7 +73,7 @@ public class TableDAOTest extends TableDAOMocker {
 	public void testDeleteTableEntry() {
 		DatabaseDAO dao = null;
 		try {
-			mockDeleteTableEntry();
+			mockDeleteFileEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
@@ -83,7 +83,7 @@ public class TableDAOTest extends TableDAOMocker {
 			
 			dao.setDataSource(datasource);
 			
-			boolean deleted = dao.deleteTableEntry(TEMP_PATH, FLOW_ID);
+			boolean deleted = dao.deleteFileEntry(TEMP_PATH, FLOW_ID);
 			
 			assertTrue(deleted);
 			
@@ -97,7 +97,7 @@ public class TableDAOTest extends TableDAOMocker {
 	public void testDeleteNonExistingTableEntry() {
 		DatabaseDAO dao = null;
 		try {
-			mockDeleteNonExistingTableEntry();
+			mockDeleteNonExistingFileEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
@@ -107,7 +107,7 @@ public class TableDAOTest extends TableDAOMocker {
 			
 			dao.setDataSource(datasource);
 			
-			boolean deleted = dao.deleteTableEntry(TEMP_PATH, FLOW_ID);
+			boolean deleted = dao.deleteFileEntry(TEMP_PATH, FLOW_ID);
 			
 			assertFalse(deleted);
 			
@@ -120,7 +120,7 @@ public class TableDAOTest extends TableDAOMocker {
 	public void testGetTableEntry() {
 		DatabaseDAO dao = null;
 		try {
-			mockGetTableEntry();
+			mockGetFileEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
@@ -130,7 +130,7 @@ public class TableDAOTest extends TableDAOMocker {
 			
 			dao.setDataSource(datasource);
 			
-			VirtualFileEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
+			VirtualFileEntry entry = dao.getFileEntry(TEMP_PATH, FLOW_ID);
 			
 			assertNotNull(entry);
 			
@@ -143,7 +143,7 @@ public class TableDAOTest extends TableDAOMocker {
 	public void testGetNonExistingTableEntry() {
 		DatabaseDAO dao = null;
 		try {
-			mockGetNonExistingTableEntry();
+			mockGetNonExistingFileEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
@@ -153,7 +153,7 @@ public class TableDAOTest extends TableDAOMocker {
 			
 			dao.setDataSource(datasource);
 			
-			VirtualFileEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
+			VirtualFileEntry entry = dao.getFileEntry(TEMP_PATH, FLOW_ID);
 			
 			assertNull(entry);
 			
@@ -166,4 +166,27 @@ public class TableDAOTest extends TableDAOMocker {
 		return DAOFactory.getDAO(DAOFactory.DAOType.DATABASE, context);
 	}
 	
+	@Test
+	public void testUpdateTableEntry() {
+		DatabaseDAO dao = null;
+		try {
+			mockUpdateFileEntry();
+			assertNotNull(datasource);
+			assertNull(dao);
+			
+			dao = getDatabaseDAO(new DAOContext());
+			
+			assertNotNull(dao);
+			
+			dao.setDataSource(datasource);
+			
+			boolean updated = dao.updateFileEntry(getFileEntry());
+			
+			assertTrue(updated);
+			
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
 }
