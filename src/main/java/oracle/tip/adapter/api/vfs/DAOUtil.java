@@ -23,14 +23,14 @@ public class DAOUtil {
          * @param entry
          * @throws DAOException
          */
-        public static TableEntry populateEntry(ResultSet resultSet) throws DAOException {
-        	TableEntry entry = null;
+        public static VirtualFileEntry populateEntry(ResultSet resultSet) throws DAOException {
+        	VirtualFileEntry entry = null;
             try {
                 if(resultSet == null) {
                         throw new NullPointerException("Either resultSet or entry object are null");
                 }
                 if(resultSet.next()) {
-                	entry = new TableEntry();
+                	entry = new VirtualFileEntry();
                     entry.setFilePath(resultSet.getString(1));
                     entry.setAttachmentInputStream(resultSet.getBinaryStream(2));
                     entry.setMetadataInputStream(resultSet.getBinaryStream(3));
@@ -53,7 +53,7 @@ public class DAOUtil {
          * @param prepStatement
          * @throws DAOException
          */
-        public static void updateStatement(TableEntry entry, PreparedStatement prepStatement) throws DAOException {
+        public static void updateStatement(VirtualFileEntry entry, PreparedStatement prepStatement) throws DAOException {
             try {
                     if(prepStatement == null || entry == null) {
                             throw new NullPointerException("Either Statement or entry object are null");
@@ -75,7 +75,7 @@ public class DAOUtil {
     }
 
 
-		public static String getUpdateQuery(TableEntry entry) {
+		public static String getUpdateQuery(VirtualFileEntry entry) {
 			StringBuilder builder = new StringBuilder();
 			boolean gotData = false;
             builder.append("UPDATE ATTACHMENT_TABLE SET ");

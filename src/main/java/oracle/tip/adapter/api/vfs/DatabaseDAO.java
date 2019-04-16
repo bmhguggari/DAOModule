@@ -6,14 +6,14 @@ import javax.sql.DataSource;
  * @author hguggari
  *
  */
-public interface TableDAO {
+public interface DatabaseDAO {
 	/**
 	 * Method persists the TableEntry object into the database table "ATTACHMENT_TABLE"
 	 * @param entry
 	 * @return returns true, if entry is inserted successfully, else false.
 	 * @throws DAOException
 	 */
-    boolean insertTableEntry(TableEntry entry) throws DAOException;
+    boolean insertTableEntry(VirtualFileEntry entry) throws DAOException;
 
     /**
      * Method receives filePath and FlowId, finds the record associated with these two fields and return the entry
@@ -22,7 +22,7 @@ public interface TableDAO {
      * @return TableEntry object associated with filePath and FlowId. Null object if not present in the database
      * @throws DAOException
      */
-    TableEntry getTableEntry(String filePath, String flowId) throws DAOException;
+    VirtualFileEntry getTableEntry(String filePath, String flowId) throws DAOException;
 
     /**
      * Update the Attachment BLOB and Meta data BLOB fields associated with file path and flow id
@@ -30,7 +30,7 @@ public interface TableDAO {
      * @return returns true, if table entry is updated else false
      * @throws DAOException
      */
-    boolean updateTableEntry(TableEntry entry) throws DAOException;
+    boolean updateTableEntry(VirtualFileEntry entry) throws DAOException;
 
     /**
      * If there is table entry with file path and flow id in the database, it deletes it from the database. else does nothing 

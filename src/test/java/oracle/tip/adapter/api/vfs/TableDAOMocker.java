@@ -40,8 +40,8 @@ public class TableDAOMocker {
 	protected ResultSet resultSet = mock(ResultSet.class);
 	
 	
-	protected TableEntry getTableEntry() {
-		TableEntry entry = new TableEntry();
+	protected VirtualFileEntry getTableEntry() {
+		VirtualFileEntry entry = new VirtualFileEntry();
 		File file = new File(TEMP_PATH);
 		entry.setFilePath(file.getAbsolutePath());
 		entry.setParent(file.getParent());
@@ -122,7 +122,7 @@ public class TableDAOMocker {
         
         when(prepStatement.executeQuery()).thenReturn(resultSet);
         
-        TableEntry entry = getTableEntry();
+        VirtualFileEntry entry = getTableEntry();
         
         when(resultSet.next()).thenReturn(true);
         

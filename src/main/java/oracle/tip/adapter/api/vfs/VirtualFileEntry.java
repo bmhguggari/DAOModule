@@ -7,9 +7,9 @@ import java.io.OutputStream;
  * @author hguggari
  *
  */
-public class TableEntry {
+public class VirtualFileEntry {
 
-        public TableEntry() {
+        public VirtualFileEntry() {
         }
 
          private String fileName;
@@ -119,5 +119,4 @@ public class TableEntry {
 	public void setData(byte[] data) {
 	        this.data = data;
 	}
-	
 }

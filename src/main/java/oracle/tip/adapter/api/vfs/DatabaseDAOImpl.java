@@ -9,7 +9,7 @@ import java.sql.SQLException;
  * @author hguggari
  *
  */
-public class TableDAOImpl extends BaseDAO implements TableDAO {
+public class DatabaseDAOImpl extends BaseDAO implements DatabaseDAO {
 
         private static final String INSERT_ENTRY = "INSERT INTO ATTACHMENT_TABLE(FILEPATH, ATTACHMENT_BLOB, METADATA_BLOB, PARENT, FLOWID, TENANTID, IS_CHUNKED, IS_DIRECTORY) " +
                         " VALUES(?, ?, ?, ?, ?, ?, ?, ?)";
@@ -19,12 +19,12 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
         
         private static final String DELETE_ENTRY = "DELETE FROM ATTACHMENT_TABLE WHERE FILEPATH = ? AND FLOWID = ?";
 
-        public TableDAOImpl(DAOContext context) throws Exception {
+        public DatabaseDAOImpl(DAOContext context) throws Exception {
                 super(context);
         }
 
        
-        public boolean insertTableEntry(TableEntry entry) throws DAOException {
+        public boolean insertTableEntry(VirtualFileEntry entry) throws DAOException {
             Connection connection = null;
             PreparedStatement prepStatement = null;
             int count = 0;
@@ -56,7 +56,7 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
         }
         
        
-        public TableEntry getTableEntry(String filePath, String flowId) throws DAOException {
+        public VirtualFileEntry getTableEntry(String filePath, String flowId) throws DAOException {
                 Connection connection = null;
                 PreparedStatement prepStatement = null;
                 ResultSet resultSet = null;
@@ -78,7 +78,7 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
                         resultSet = prepStatement.executeQuery();
 
                         //Ask helper to populate the entry object from the result set
-                        TableEntry entry = DAOUtil.populateEntry(resultSet);
+                        VirtualFileEntry entry = DAOUtil.populateEntry(resultSet);
 
                         return entry;
 
@@ -93,7 +93,7 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
         }
 
 
-        public boolean updateTableEntry(TableEntry entry) throws DAOException {
+        public boolean updateTableEntry(VirtualFileEntry entry) throws DAOException {
             Connection connection = null;
             PreparedStatement prepStatement = null;
             int count = 0;
@@ -102,7 +102,7 @@ public class TableDAOImpl extends BaseDAO implements TableDAO {
                     throw new DAOException("Entry should not be null");
             	}
             	
-            	TableEntry oldEntry = getTableEntry(entry.getFilePath(), entry.getFlowId());
+            	VirtualFileEntry oldEntry = getTableEntry(entry.getFilePath(), entry.getFlowId());
             	if(oldEntry == null) {
             		throw new DAOException("Entry not found in the database with given details");
             	}

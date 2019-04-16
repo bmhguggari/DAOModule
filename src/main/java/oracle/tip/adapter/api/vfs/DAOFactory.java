@@ -17,9 +17,9 @@ public class DAOFactory {
 	public DAOFactory() {
 	}
 	
-	public static TableDAO getDAO(DAOType type, DAOContext context) throws Exception {
+	public static DatabaseDAO getDAO(DAOType type, DAOContext context) throws Exception {
 		if(type == DAOType.DATABASE) {
-			return new TableDAOImpl(context);
+			return new DatabaseDAOImpl(context);
 		} else if(type == DAOType.INMEMORY) {
 			return null;
 		} else {

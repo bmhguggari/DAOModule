@@ -28,13 +28,13 @@ public class TableDAOTest extends TableDAOMocker {
 	
 	@Test 
 	public void testNewTableEntry() {
-		TableDAO dao = null;
+		DatabaseDAO dao = null;
 		try {
 			mockNewTableEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
-			dao = new TableDAOImpl(new DAOContext());
+			dao = getDatabaseDAO(new DAOContext());
 			
 			assertNotNull(dao);
 			
@@ -52,12 +52,12 @@ public class TableDAOTest extends TableDAOMocker {
 
 	@Test(expected = DAOException.class)
 	public void testDuplicateTableEntry() throws Exception {
-		TableDAO dao = null;
+		DatabaseDAO dao = null;
 			mockDuplicateTableEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
-			dao = new TableDAOImpl(new DAOContext());
+			dao = getDatabaseDAO(new DAOContext());
 			
 			assertNotNull(dao);
 			
@@ -71,13 +71,13 @@ public class TableDAOTest extends TableDAOMocker {
 	
 	@Test 
 	public void testDeleteTableEntry() {
-		TableDAO dao = null;
+		DatabaseDAO dao = null;
 		try {
 			mockDeleteTableEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
-			dao = new TableDAOImpl(new DAOContext());
+			dao = getDatabaseDAO(new DAOContext());
 			
 			assertNotNull(dao);
 			
@@ -95,13 +95,13 @@ public class TableDAOTest extends TableDAOMocker {
 	
 	@Test
 	public void testDeleteNonExistingTableEntry() {
-		TableDAO dao = null;
+		DatabaseDAO dao = null;
 		try {
 			mockDeleteNonExistingTableEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
-			dao = new TableDAOImpl(new DAOContext());
+			dao = getDatabaseDAO(new DAOContext());
 			
 			assertNotNull(dao);
 			
@@ -118,19 +118,19 @@ public class TableDAOTest extends TableDAOMocker {
 	
 	@Test
 	public void testGetTableEntry() {
-		TableDAO dao = null;
+		DatabaseDAO dao = null;
 		try {
 			mockGetTableEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
-			dao = new TableDAOImpl(new DAOContext());
+			dao = getDatabaseDAO(new DAOContext());
 			
 			assertNotNull(dao);
 			
 			dao.setDataSource(datasource);
 			
-			TableEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
+			VirtualFileEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
 			
 			assertNotNull(entry);
 			
@@ -141,25 +141,29 @@ public class TableDAOTest extends TableDAOMocker {
 	
 	@Test
 	public void testGetNonExistingTableEntry() {
-		TableDAO dao = null;
+		DatabaseDAO dao = null;
 		try {
 			mockGetNonExistingTableEntry();
 			assertNotNull(datasource);
 			assertNull(dao);
 			
-			dao = new TableDAOImpl(new DAOContext());
+			dao = getDatabaseDAO(new DAOContext());
 			
 			assertNotNull(dao);
 			
 			dao.setDataSource(datasource);
 			
-			TableEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
+			VirtualFileEntry entry = dao.getTableEntry(TEMP_PATH, FLOW_ID);
 			
 			assertNull(entry);
 			
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+	}
+	
+	private DatabaseDAO getDatabaseDAO(DAOContext context) throws Exception {
+		return DAOFactory.getDAO(DAOFactory.DAOType.DATABASE, context);
 	}
 	
 }
