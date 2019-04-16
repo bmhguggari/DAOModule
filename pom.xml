@@ -8,16 +8,10 @@
   <name>DAOModule</name>
   <url>http://maven.apache.org</url>
   <dependencies>
-  	<dependency>
+  	<!-- dependency>
     	<groupId>com.oracle</groupId>
     	<artifactId>ojdbc7</artifactId>
     	<version>11.2.0</version>
-	</dependency>
-	<!-- dependency>
-		<groupId>org.easymock</groupId>
-		<artifactId>easymock</artifactId>
-		<version>4.0.2</version>
-		<scope>test</scope>
 	</dependency-->
     <dependency>
       <groupId>junit</groupId>
@@ -31,12 +25,5 @@
 	    <version>1.10.19</version>
 	    <scope>test</scope>
 	</dependency>
-    <!-- dependency>
-    	<groupId>com.mockrunner</groupId>
-    	<artifactId>mockrunner</artifactId>
-    	<version>1.0.0.0</version>
-    	<scope>system</scope>
-    	<systemPath>D:\Project Doc\OIC\AgentApps\dbmock\mockrunner.jar</systemPath>
-    </dependency-->
   </dependencies>
 </project>
